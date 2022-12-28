@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Select Parking</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link th:href="@{css/bootstrap.css}" rel="stylesheet"/>
+</head>
+
+<body>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" th:href="@{/}">Home</a>
+    </div>
+  </div>
+</nav>
+
+
+<form class="form-horizontal" th:method="POST">
+  <fieldset>
+    <legend>Enter zone id, to delete the zone</legend>
+
+
+    <div class="form-group">
+      <label for="zoneId" class="col-lg-2 control-label">zoneId</label>
+      <div class="col-lg-6">
+        <input type="text" autofocus="autofocus" name="zoneId"  th:text="${infoText}" title="Zone Id" class="form-control"
+               id="zoneId"/>
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <div class="col-lg-2 col-lg-offset-2">
+        <button type="submit" class="btn btn-primary">Delete</button>
+      </div>
+      <div class="col-lg-2 col-lg-offset-0">
+        <a th:href="@{/}" class="btn btn-primary">Cancel</a>
+      </div>
+    </div>
+    <div class="jumbotron">
+      <form >
+        <div class="col-md-12 d-flex justify-content-center">
+          <label class="display-4" for="export-project-textarea">Available Zonees:</label>
+        </div>
+        <div class="col-md-12 d-flex justify-content-center">
+          <div class="col-md-8 d-flex justify-content-center">
+            <textarea class="form-control" id="export-project-textarea" rows="20" th:text="${parkingZones}" readonly></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+
+
+
+
+  </fieldset>
+</form>
+
+
+<hr/>
+
+<footer>
+  <p>&copy; Amir Hadzhiev</p>
+</footer>
+</div>
+
+</body>
+</html>

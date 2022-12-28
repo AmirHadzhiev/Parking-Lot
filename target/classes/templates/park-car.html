@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Phonebook</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link th:href="@{css/bootstrap.css}" rel="stylesheet"/>
+</head>
+
+<body>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" th:href="@{/home}">Home</a>
+    </div>
+  </div>
+</nav>
+
+
+<form class="form-horizontal" th:method="POST">
+  <fieldset>
+    <legend>Enter required input </legend>
+
+
+    <div class="form-group">
+      <label for="CarId" class="col-lg-2 control-label">Car Id</label>
+      <div class="col-lg-4">
+        <input type="text" autofocus="autofocus" name="carId" title="CarId" class="form-control"
+               id="CarId"  th:value="${carId}"/>
+      </div>
+      <div class="col-lg-2 col-lg-offset-1">
+        <button type="submit" class="btn btn-primary">Check Input</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="ParkingId" class="col-lg-2 control-label">Parking Id</label>
+      <div class="col-lg-4">
+        <input type="text" autofocus="autofocus" name="parkingId" title="ParkingId" class="form-control"
+               id="ParkingId"  th:value="${parkingId}"/>
+      </div>
+      <div class="col-lg-2 col-lg-offset-1">
+        <button type="submit" class="btn btn-primary">Check Input</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="ParkingZoneId" class="col-lg-2 control-label">Parking Zone Id</label>
+      <div class="col-lg-4">
+        <input type="text" autofocus="autofocus" name="zoneId" title="ParkingZoneId" class="form-control"
+               id="ParkingZoneId"  th:value="${zoneId}"/>
+      </div>
+      <div class="col-lg-2 col-lg-offset-1">
+        <button type="submit" class="btn btn-primary">Check Input</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="ParkingPlaceId" class="col-lg-2 control-label">Parking Place Id</label>
+      <div class="col-lg-4">
+        <input type="text" autofocus="autofocus" name="placeId" title="ParkingPlaceId" class="form-control"
+               id="ParkingPlaceId"  th:value="${placeId}"/>
+      </div>
+      <div class="col-lg-2 col-lg-offset-1">
+        <button type="submit" class="btn btn-primary">Park the Car</button>
+      </div>
+    </div>
+    <div class="jumbotron">
+      <form >
+        <div class="col-md-3 d-flex justify-content-center">
+          <label class="display-4" for="export-project-textarea-place">Available Cars:</label>
+          <textarea class="form-control" id="export-project-textarea-car" rows="20" th:text="${cars}" readonly></textarea>
+        </div>
+      </form>
+      <form >
+        <div class="col-md-3 d-flex justify-content-center">
+          <label class="display-4" for="export-project-textarea-parking">Available Parkings:</label>
+            <textarea class="form-control" id="export-project-textarea-parking" rows="20" th:text="${parkings}" readonly></textarea>
+        </div>
+      </form>
+      <form >
+        <div class="col-md-3 d-flex justify-content-center">
+          <label class="display-4" for="export-project-textarea-zone">Available Parking Zones:</label>
+            <textarea class="form-control" id="export-project-textarea-zone" rows="20" th:text="${parkingZones}" readonly></textarea>
+        </div>
+      </form>
+      <form >
+        <div class="col-md-3 d-flex justify-content-center">
+          <label class="display-4" for="export-project-textarea-place">Available Parking Places:</label>
+            <textarea class="form-control" id="export-project-textarea-place" rows="20" th:text="${parkingPlaces}" readonly></textarea>
+        </div>
+      </form>
+    </div>
+  </fieldset>
+</form>
+<hr/>
+<footer>
+  <p>&copy; Amir Hadzhiev</p>
+</footer>
+</div>
+
+</body>
+</html>

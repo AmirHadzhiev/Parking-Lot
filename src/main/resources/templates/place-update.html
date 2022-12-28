@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Update Parking Place</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link th:href="@{css/bootstrap.css}" rel="stylesheet"/>
+</head>
+
+<body>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" th:href="@{/}">Home</a>
+    </div>
+  </div>
+</nav>
+
+<form class="form-horizontal" th:method="POST">
+  <fieldset>
+    <legend>Update A Parking Place</legend>
+    <div class="form-group">
+      <label for="Number" class="col-lg-2 control-label">Name</label>
+      <div class="col-lg-6">
+        <input type="text" autofocus="autofocus" name="number" title="Number" class="form-control"
+               id="Number" th:value="${number}"/>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-4 col-lg-offset-4">
+          <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+        <div class="col-lg-4 col-lg-offset-0">
+          <a th:href="@{/}" class="btn btn-primary">Cancel</a>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+</form>
+<hr/>
+
+<footer>
+  <p>&copy; Amir Hadzhiev</p>
+</footer>
+</div>
+
+</body>
+</html>

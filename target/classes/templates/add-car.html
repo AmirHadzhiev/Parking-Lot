@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Add Car</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link th:href="@{css/bootstrap.css}" rel="stylesheet"/>
+</head>
+
+<body>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" th:href="@{/}">Home</a>
+    </div>
+  </div>
+</nav>
+
+
+
+<form class="form-horizontal" th:method="POST">
+  <fieldset>
+    <legend>Add Car</legend>
+    <div class="form-group">
+      <label for="plateNumber" class="col-lg-2 control-label">Plate Number</label>
+      <div class="col-lg-6">
+        <input type="text" autofocus="autofocus" name="plateNumber" title="plateNumber" class="form-control"
+               id="plateNumber"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-lg-2 col-lg-offset-2">
+        <button type="submit" class="btn btn-primary">Add</button>
+      </div>
+      <div class="col-lg-2 col-lg-offset-0">
+        <a th:href="@{/}" class="btn btn-primary">Cancel</a>
+      </div>
+      <div class="col-lg-2 col-lg-offset-0">
+        <a th:href="@{/park-car}" class="btn btn-primary">Park a Car</a>
+      </div>
+    </div>
+  </fieldset>
+</form>
