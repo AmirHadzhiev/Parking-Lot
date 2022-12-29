@@ -25,12 +25,8 @@ public class HomeControler {
     }
 
 
-    @GetMapping("/")
+   @GetMapping("/")
     public String home(Model model) {
-
-        boolean areImported = this.carService.areImported();
-
-        model.addAttribute("areImported", areImported);
 
         return "home";
     }

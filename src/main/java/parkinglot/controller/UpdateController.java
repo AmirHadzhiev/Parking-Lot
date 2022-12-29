@@ -19,6 +19,10 @@ import parkinglot.service.ParkingPlaceService;
 import parkinglot.service.ParkingService;
 import parkinglot.service.ParkingZoneService;
 
+import java.time.temporal.ValueRange;
+
+import static parkinglot.config.Messages.INVALID_ID;
+
 @Controller
 public class UpdateController {
 
@@ -53,11 +57,39 @@ public class UpdateController {
     }
 
     @PostMapping("/select-parking-update")
-    public String takeParkingToUpdate (Long parkingId){
-       selectedParkingId=parkingId;
+    public String takeParkingToUpdate (Model model,String StringId) {
+        boolean catchException = false;
+        try {
+            Long parkingId = Long.valueOf(StringId);
+        } catch (NumberFormatException nfe) {
+            catchException = true;
+        }
+        if (!catchException) {
+            Long parkingId = Long.valueOf(StringId);
+            if (parkingService.getParkingById(parkingId).isPresent()) {
+                selectedParkingId = parkingId;
+                return "redirect:/parking-update";
+            }
+            String errorText = "Invalid Id";
+            model.addAttribute("mistakeForId", errorText);
+            String info = parkingService.getAllParkings();
+            if (info.isEmpty()) {
+                info = "Don't have parkings";
+            }
+            model.addAttribute("parkingList", info);
+            return "/select-parking-update";
 
+        } else {
+            String errorText = "Invalid Id";
 
-        return "redirect:/parking-update";
+            String info = parkingService.getAllParkings();
+            if (info.isEmpty()) {
+                info = "Don't have parkings";
+            }
+            model.addAttribute("parkingList", info);
+            model.addAttribute("mistakeForId", errorText);
+            return "/select-parking-update";
+        }
     }
 
     @GetMapping("/parking-update")
@@ -84,20 +116,47 @@ public class UpdateController {
     @GetMapping("/select-zone-update")
     public String selectZoneForUpdate(Model model) {
 
+
        String allZones = parkingZoneService.getAllZones();
         if (allZones.isEmpty()){
-            allZones="Don't have zone, you can add zone in Parking Zone Operations ";
+            allZones="Don't have zone, you can add zone in Parking Zone Operations";
         }
         model.addAttribute("zoneList", allZones);
         return "select-zone-update";
     }
 
     @PostMapping("/select-zone-update")
-    public String takeZonesForUpdate (Long zoneId){
-        selectedZoneId=zoneId;
+    public String takeZonesForUpdate (Model model,String StringId){
+       // selectedZoneId=zoneId;
+        boolean catchException = false;
+        try {
+            Long zoneId = Long.valueOf(StringId);
+        } catch (NumberFormatException nfe) {
+            catchException = true;
+        }
+        if (!catchException) {
+            Long zoneId = Long.valueOf(StringId);
+            if (parkingZoneService.getZoneById(zoneId)!=null) {
+                selectedZoneId=zoneId;
+                return "redirect:/zone-update";
+            }
+            model.addAttribute("mistakeForId", INVALID_ID);
+            String info = parkingZoneService.getAllZones();
+            if (info.isEmpty()) {
+                info = "Don't have zone, you can add zone in Parking Zone Operations";
+            }
+            model.addAttribute("zoneList", info);
+            return "/select-zone-update";
 
-
-        return "redirect:/zone-update";
+        } else {
+            String info = parkingZoneService.getAllZones();
+            if (info.isEmpty()) {
+                info = "Don't have zone, you can add zone in Parking Zone Operations";
+            }
+            model.addAttribute("zoneList", info);
+            model.addAttribute("mistakeForId", INVALID_ID);
+            return "/select-zone-update";
+        }
     }
 
     @GetMapping("/zone-update")
@@ -123,18 +182,44 @@ public class UpdateController {
 
         String pLaces = parkingPlaceService.getAllParkingPLaces();
         if (pLaces.isEmpty()){
-            pLaces="Don't have Parking Places";
+            pLaces="Don't have places, you can add place in Parking Place Operations";
         }
         model.addAttribute("placeList", pLaces);
         return "select-place-update";
     }
 
     @PostMapping("/select-place-update")
-    public String takePlaceToUpdate (Long placeId){
-        selectedPlaceId=placeId;
+    public String takePlaceToUpdate (Model model,String StringId){
 
+        boolean catchException = false;
+        try {
+            Long placeId = Long.valueOf(StringId);
+        } catch (NumberFormatException nfe) {
+            catchException = true;
+        }
+        if (!catchException) {
+            Long placeId = Long.valueOf(StringId);
+            if (parkingPlaceService.getParkingPlaceById(placeId).isPresent()) {
+                selectedPlaceId=placeId;
+                return "redirect:/place-update";
+            }
+            model.addAttribute("mistakeForId", INVALID_ID);
+            String info = parkingPlaceService.getAllParkingPLaces();
+            if (info.isEmpty()) {
+                info = "Don't have place, you can add place in Parking Place Operations";
+            }
+            model.addAttribute("placeList", info);
+            return "/select-place-update";
 
-        return "redirect:/place-update";
+        } else {
+            String info = parkingPlaceService.getAllParkingPLaces();
+            if (info.isEmpty()) {
+                info = "Don't have place, you can add zone in Parking Place Operations";
+            }
+            model.addAttribute("placeList", info);
+            model.addAttribute("mistakeForId", INVALID_ID);
+            return "/select-place-update";
+        }
     }
 
     @GetMapping("/place-update")
@@ -161,17 +246,43 @@ public class UpdateController {
 
         String allCars = carService.getAllCars();
         if (allCars.isEmpty()){
-            allCars="Don't have cars";
+            allCars="Don't have cars, you can add car in Car Operations";
         }
         model.addAttribute("carList", allCars);
         return "select-car-update";
     }
 
     @PostMapping("/select-car-update")
-    public String takeCarToUpdate (Long carId){
-        selectedCarId=carId;
+    public String takeCarToUpdate (Model model,String StringId){
+       boolean catchException = false;
+        try {
+            Long carId = Long.valueOf(StringId);
+        } catch (NumberFormatException nfe) {
+            catchException = true;
+        }
+        if (!catchException) {
+            Long carId = Long.valueOf(StringId);
+            if (carService.getCarById(carId).isPresent()) {
+                selectedCarId=carId;
+                return "redirect:/car-update";
+            }
+            model.addAttribute("mistakeForId", INVALID_ID);
+            String info = carService.getAllCars();
+            if (info.isEmpty()) {
+                info = "Don't have cars, you can add car in Car Operations";
+            }
+            model.addAttribute("carList", info);
+            return "/select-car-update";
 
-        return "redirect:/car-update";
+        } else {
+            String info = carService.getAllCars();
+            if (info.isEmpty()) {
+                info = "Don't have cars, you can add car in Car Operations";
+            }
+            model.addAttribute("carList", info);
+            model.addAttribute("mistakeForId", INVALID_ID);
+            return "/select-car-update";
+        }
     }
 
     @GetMapping("/car-update")

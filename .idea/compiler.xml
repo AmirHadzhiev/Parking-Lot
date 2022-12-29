@@ -7,11 +7,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="parkinglot" />
+        <module name="Parking-Lot" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Parking-Lot" options="-parameters" />
       <module name="parkinglot" options="-parameters" />
     </option>
   </component>

@@ -49,13 +49,15 @@ public class CarService {
        return this.carRepository.count()>0;
     }
 
-    public void addCar(CarDTO carDTO) {
+    public String addCar(CarDTO carDTO) {
 
         boolean isValid = validationUtil.isValid(carDTO);
         if (isValid) {
             Car carToSafe = modelMapper.map(carDTO, Car.class);
             carRepository.saveAndFlush(carToSafe);
+            return null;
         }
+        return "plateNumber";
     }
 
 

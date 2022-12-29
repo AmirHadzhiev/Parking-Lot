@@ -2,11 +2,15 @@ package parkinglot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import parkinglot.models.dto.ParkingPlaceDTO;
 import parkinglot.service.ParkingPlaceService;
+
+import static parkinglot.config.Messages.INVALID_CITY;
+import static parkinglot.config.Messages.INVALID_PLACE_NUMBER;
 
 @Controller
 public class ParkingPlaceController {
@@ -25,11 +29,14 @@ public class ParkingPlaceController {
     }
 
     @PostMapping("/places-with-id")
-    public String addParkingPlaceWithId (ParkingPlaceDTO parkingPlaceDTO){
+    public String addParkingPlaceWithId (Model model, ParkingPlaceDTO parkingPlaceDTO){
 
-        parkingPlaceService.addParkingPlaceWithParkingId(parkingPlaceDTO);
+        String excForPlace = parkingPlaceService.addParkingPlaceWithParkingId(parkingPlaceDTO);
+        if (excForPlace!=null){
+            model.addAttribute("mistakeForPlace",INVALID_PLACE_NUMBER);
+        }
 
 
-        return "redirect:/places-with-id" ;
+        return "/places-with-id" ;
     }
 }

@@ -45,8 +45,22 @@ public class ParkingPlaceService {
     public void selectParkingZoneId(Long parkingZoneId) {
         selectedParkingZoneId=parkingZoneId;
     }
-    public void addParkingPlaceWithParkingId(ParkingPlaceDTO parkingPlaceDTO) {
+    public String addParkingPlaceWithParkingId(ParkingPlaceDTO parkingPlaceDTO) {
         Optional<ParkingZone> zone = parkingZoneRepository.findById(selectedParkingZoneId);
+
+        boolean testingPlaceForExc = false;
+        try {
+            int placeCode = Integer.parseInt(parkingPlaceDTO.getNumber());
+        } catch (NumberFormatException nfe){
+            testingPlaceForExc=true;
+        }
+        if (testingPlaceForExc){
+            return "place";
+        }
+        if (parkingPlaceDTO.getNumber().length()< 1 || parkingPlaceDTO.getNumber().length()>5){
+            return "place";
+        }
+
         if (zone.isPresent()){
 
             ParkingPlace parkingPlaceToSafe = modelMapper.map(parkingPlaceDTO, ParkingPlace.class);
@@ -63,8 +77,8 @@ public class ParkingPlaceService {
             parkingZone.setParkingPlace(parkingPlace);
 
             parkingZoneRepository.saveAndFlush(parkingZone);
-
         }
+        return null;
     }
     public String getFreeParkingPlacesForZone(Long zoneId) {
 

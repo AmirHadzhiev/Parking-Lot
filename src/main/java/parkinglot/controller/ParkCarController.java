@@ -31,7 +31,7 @@ public class ParkCarController {
    }
 
     @GetMapping("/park-car")
-    public String exportParkingZone(Model model) {
+    public String getParkInfo(Model model) {
         String allParkings = parkingService.getAllParkings();
         String allAvailableCars = carService.getAllNotParkedCars();
         if (allParkings.isEmpty()){
@@ -47,7 +47,7 @@ public class ParkCarController {
     }
 
     @PostMapping("/park-car")
-    public String addParkingZone (Model model, ParkCarDTO parkCarDTO){
+    public String parkCar (Model model, ParkCarDTO parkCarDTO){
         String allParkings = parkingService.getAllParkings();
         String allAvailableCars = carService.getAllNotParkedCars();
         if (allParkings.isEmpty()){

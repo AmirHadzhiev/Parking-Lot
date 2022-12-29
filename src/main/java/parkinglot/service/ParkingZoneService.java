@@ -37,19 +37,22 @@ public class ParkingZoneService {
     public void selectParkingId(Long id) {
         selectedParkingId=id;
     }
-    public void addParkingZoneWithParkingId(ParkingZoneDTO parkingZoneDTO) {
+    public String addParkingZoneWithParkingId(ParkingZoneDTO parkingZoneDTO) {
         Optional<Parking> parking = parkingRepository.findById(selectedParkingId);
 
+        if (parkingZoneDTO.getName().length()<2 || parkingZoneDTO.getName().length()>30) {
+            return "name";
+        }
         if (parking.isPresent()) {
+
             ParkingZone parkingZoneToSafe = modelMapper.map(parkingZoneDTO, ParkingZone.class);
             parkingZoneRepository.saveAndFlush(parkingZoneToSafe);
-
-
             List<ParkingZone> parkingZones = parking.get().getParkingZones();
             parkingZones.add(parkingZoneToSafe);
             parking.get().setParkingZones(parkingZones);
             parkingRepository.saveAndFlush(parking.get());
         }
+        return null;
     }
 
     public String getAllZonesByParkingId(Long id) {

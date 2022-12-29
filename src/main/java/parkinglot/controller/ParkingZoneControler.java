@@ -2,11 +2,15 @@ package parkinglot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import parkinglot.models.dto.ParkingZoneDTO;
 import parkinglot.service.ParkingZoneService;
+
+import static parkinglot.config.Messages.INVALID_NAME;
+import static parkinglot.config.Messages.INVALID_ZONE_NAME;
 
 @Controller
 public class ParkingZoneControler {
@@ -28,8 +32,12 @@ public class ParkingZoneControler {
     }
 
     @PostMapping("/zones-with-id")
-    public String addParkingZoneWithId (ParkingZoneDTO parkingZoneDTO){
-        parkingZoneService.addParkingZoneWithParkingId(parkingZoneDTO);
+    public String addParkingZoneWithId (Model model,ParkingZoneDTO parkingZoneDTO){
+
+        String exception = parkingZoneService.addParkingZoneWithParkingId(parkingZoneDTO);
+        if (exception!=null){
+            model.addAttribute("mistakeForName",INVALID_ZONE_NAME);
+        }
 
         return "/zones-with-id" ;
     }

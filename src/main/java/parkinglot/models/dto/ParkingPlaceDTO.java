@@ -10,6 +10,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ParkingPlaceDTO {
 
-
     String number;
 }

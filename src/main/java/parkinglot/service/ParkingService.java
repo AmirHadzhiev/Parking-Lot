@@ -9,8 +9,12 @@ import parkinglot.models.entity.Parking;
 import parkinglot.repository.ParkingRepository;
 import parkinglot.utils.ValidationUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 public class ParkingService {
@@ -29,12 +33,43 @@ public class ParkingService {
         this.validationUtil = validationUtil;
     }
 
-    public void addParking(ParkingDTO parkingDTO) {
+    public List<String> addParking(ParkingDTO parkingDTO) {
+       List<String> caughtErrors = new ArrayList<>();
 
-        Parking parkingToSafe = modelMapper.map(parkingDTO, Parking.class);
-        parkingRepository.saveAndFlush(parkingToSafe);
+       boolean testingZipCodeForExc = false;
+        try {
+            int zipCode = Integer.parseInt(parkingDTO.getZipCode());
+        } catch (NumberFormatException nfe){
+            testingZipCodeForExc=true;
+        }
 
+
+        if (parkingDTO.getName().length()<2 || parkingDTO.getName().length()>30) {
+                caughtErrors.add("name");
+            }
+        if (parkingDTO.getCity()==null || parkingDTO.getCity().length()<2 || parkingDTO.getCity().length()>30) {
+            caughtErrors.add("city");
+        }
+
+            if (!testingZipCodeForExc) {
+                int zipCode = Integer.parseInt(parkingDTO.getZipCode());
+                if (parkingDTO.getZipCode().length()!=4){
+                  caughtErrors.add("zipCode");
+                }
+            } else {
+                caughtErrors.add("zipCode");
+            }
+            if (parkingDTO.getStreet().length()<2 || parkingDTO.getStreet().length()>60 ){
+                caughtErrors.add("street");
+            }
+      if (caughtErrors.isEmpty()) {
+          Parking parkingToSafe = modelMapper.map(parkingDTO, Parking.class);
+          parkingRepository.saveAndFlush(parkingToSafe);
+      }
+
+            return caughtErrors;
     }
+
 
     public void deleteById(Long id){
         if (parkingRepository.findById(id).isPresent()) {

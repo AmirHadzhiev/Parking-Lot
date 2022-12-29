@@ -28,13 +28,13 @@
 
 <form class="form-horizontal" th:method="POST">
   <fieldset>
-    <legend>Enter parkingZone id</legend>
+    <legend>Enter Zone id, where Parking Place will be assigned</legend>
 
 
     <div class="form-group">
       <label for="ParkingZoneId" class="col-lg-2 control-label">ParkingZoneId</label>
       <div class="col-lg-10">
-        <input type="text" autofocus="autofocus" name="parkingZoneId" title="ParkingZoneId" class="form-control"
+        <input type="text" autofocus="autofocus" name="StringId" th:text="${mistakeForId}" title="ParkingZoneId" class="form-control"
                id="ParkingZoneId"/>
       </div>
     </div>

@@ -8,8 +8,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ParkingDTO {
+
+
     String name;
+
     String city;
+
     String street;
+
     String zipCode;
 }

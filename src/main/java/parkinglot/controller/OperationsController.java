@@ -10,6 +10,8 @@ import parkinglot.service.ParkingPlaceService;
 import parkinglot.service.ParkingService;
 import parkinglot.service.ParkingZoneService;
 
+import static parkinglot.config.Messages.INVALID_ID;
+
 
 @Controller
 public class OperationsController {
@@ -34,11 +36,26 @@ public class OperationsController {
     }
 
     @PostMapping("/parking-info")
-    public String showByParkingId (Model model,Long parkingId){
+    public String showByParkingId (Model model,String StringId){
 
-       String parkingInfo =parkingService.showParkingById(parkingId);
+        boolean catchException = false;
+        try {
+            Long parkingId = Long.valueOf(StringId);
+        } catch (NumberFormatException nfe) {
+            catchException = true;
+        }
+        if (!catchException) {
+            Long parkingId = Long.valueOf(StringId);
+            if (parkingService.getParkingById(parkingId).isPresent()) {
+                String parkingInfo =parkingService.showParkingById(parkingId);
+                model.addAttribute("selectedInfo",parkingInfo);
 
-        model.addAttribute("selectedInfo",parkingInfo);
+            }  else {
+                model.addAttribute("mistakeForId",INVALID_ID);
+            }
+        } else {
+            model.addAttribute("mistakeForId",INVALID_ID);
+        }
 
 
         return "/parking-info";
@@ -54,13 +71,24 @@ public class OperationsController {
 
 
     @PostMapping("/zone-info")
-    public String showByZoneId (Model model,Long zoneId){
-
-        String zoneInfo =parkingZoneService.showZoneById(zoneId);
-
-
-        model.addAttribute("selectedInfo",zoneInfo);
-
+    public String showByZoneId (Model model,String StringId){
+        boolean catchException = false;
+        try {
+            Long zoneId = Long.valueOf(StringId);
+        } catch (NumberFormatException nfe) {
+            catchException = true;
+        }
+        if (!catchException) {
+            Long zoneId = Long.valueOf(StringId);
+            if (parkingZoneService.getZoneById(zoneId)!=null) {
+                String zoneInfo =parkingZoneService.showZoneById(zoneId);
+                model.addAttribute("selectedInfo",zoneInfo);
+            }  else {
+                model.addAttribute("mistakeForId",INVALID_ID);
+            }
+        } else {
+            model.addAttribute("mistakeForId",INVALID_ID);
+        }
 
         return "/zone-info";
     }
@@ -74,13 +102,25 @@ public class OperationsController {
 
 
     @PostMapping("/place-info")
-    public String showByPlaceId (Model model,Long placeId){
+    public String showByPlaceId (Model model,String StringId){
+        boolean catchException = false;
+        try {
+            Long placeId = Long.valueOf(StringId);
+        } catch (NumberFormatException nfe) {
+            catchException = true;
+        }
+        if (!catchException) {
+            Long placeId = Long.valueOf(StringId);
+            if (parkingPlaceService.getParkingPlaceById(placeId).isPresent()) {
+                String placeInfo =parkingPlaceService.showPlaceById(placeId);
+                model.addAttribute("selectedInfo",placeInfo);
 
-        String placeInfo =parkingPlaceService.showPlaceById(placeId);
-
-
-        model.addAttribute("selectedInfo",placeInfo);
-
+            }  else {
+                model.addAttribute("mistakeForId",INVALID_ID);
+            }
+        } else {
+            model.addAttribute("mistakeForId",INVALID_ID);
+        }
 
         return "/place-info";
     }
@@ -94,12 +134,27 @@ public class OperationsController {
 
 
     @PostMapping("/car-info")
-    public String showByCarId (Model model,Long carId){
+    public String showByCarId (Model model,String StringId){
+        boolean catchException = false;
+        try {
+            Long carId = Long.valueOf(StringId);
+        } catch (NumberFormatException nfe) {
+            catchException = true;
+        }
+        if (!catchException) {
+            Long carId = Long.valueOf(StringId);
+            if (carService.getCarById(carId).isPresent()) {
+                String carInfo = carService.showCarInfoById(carId);
+                model.addAttribute("selectedInfo", carInfo);
 
-        String carInfo = carService.showCarInfoById(carId);
+            }  else {
+                model.addAttribute("mistakeForId",INVALID_ID);
 
+            }
+        } else {
+            model.addAttribute("mistakeForId",INVALID_ID);
 
-        model.addAttribute("selectedInfo",carInfo);
+        }
 
 
         return "/car-info";

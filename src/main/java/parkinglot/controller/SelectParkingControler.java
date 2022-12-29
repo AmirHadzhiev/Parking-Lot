@@ -9,6 +9,8 @@ import parkinglot.service.ParkingPlaceService;
 import parkinglot.service.ParkingService;
 import parkinglot.service.ParkingZoneService;
 
+import static parkinglot.config.Messages.INVALID_ID;
+
 @Controller
 public class SelectParkingControler {
 
@@ -37,11 +39,27 @@ public class SelectParkingControler {
     }
 
     @PostMapping("/select-parking")
-    public String addParkingZone (Long parkingId){
-        parkingZoneService.selectParkingId(parkingId);
-
-
-        return "redirect:/zones-with-id" ;
+    public String addParkingZone (Model model, String StringId){
+        boolean catchException = false;
+        try {
+            Long parkingId = Long.valueOf(StringId);
+        } catch (NumberFormatException nfe) {
+            catchException = true;
+        }
+        if (!catchException) {
+            Long parkingId = Long.valueOf(StringId);
+            if (parkingService.getParkingById(parkingId).isPresent()) {
+                parkingZoneService.selectParkingId(parkingId);
+                return "redirect:/zones-with-id" ;
+            }
+        }
+        model.addAttribute("mistakeForId",INVALID_ID);
+        String info = parkingService.getAllParkings();
+        if (info.isEmpty()){
+            info="Dont have parkings";
+        }
+        model.addAttribute("parkingList", info);
+        return "/select-parking" ;
     }
 
     @GetMapping("/select-zones")
@@ -59,12 +77,30 @@ public class SelectParkingControler {
     }
 
     @PostMapping("/select-zones")
-    public String addParkingPlace (Long parkingZoneId){
-      //  parkingZoneService.selectParkingId(parkingZoneId);
-        parkingPlaceService.selectParkingZoneId(parkingZoneId);
+    public String addParkingPlace (Model model,String StringId){
 
+        boolean catchException = false;
+        try {
+            Long zoneId = Long.valueOf(StringId);
+        } catch (NumberFormatException nfe) {
+            catchException = true;
+        }
+        if (!catchException) {
+            Long zoneId = Long.valueOf(StringId);
+            if (parkingZoneService.getZoneById(zoneId)!=null){
+                parkingPlaceService.selectParkingZoneId(zoneId);
+                return "redirect:/places-with-id" ;
+            }
+        }
+        String info = parkingPlaceService.getAllParkingZones();
+        if (info.isEmpty()){
+            info="Don't have parking Zones";
+            model.addAttribute("parkingZonesList", info);
+        } else {
+            model.addAttribute("mistakeForId",INVALID_ID);
+            model.addAttribute("parkingZonesList", info);}
 
-        return "redirect:/places-with-id" ;
+        return "/select-zones" ;
     }
 
 
