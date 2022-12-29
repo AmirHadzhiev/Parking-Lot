@@ -37,6 +37,6 @@ public class ParkingPlaceController {
         }
 
 
-        return "/places-with-id" ;
+        return "places-with-id" ;
     }
 }

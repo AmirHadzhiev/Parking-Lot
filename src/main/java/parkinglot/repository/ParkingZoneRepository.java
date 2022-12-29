@@ -16,4 +16,6 @@ public interface ParkingZoneRepository extends JpaRepository<ParkingZone,Long> {
     Optional<ParkingZone> findById(Long id);
 
 
+
+
 }

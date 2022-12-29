@@ -17,7 +17,7 @@ public class ParkingPlace extends BaseEntity{
     @Column
     String number;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name = "car_id",referencedColumnName = "id")
     Car car;
 

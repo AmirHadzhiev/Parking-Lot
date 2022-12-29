@@ -20,8 +20,9 @@ import parkinglot.service.ParkingService;
 import parkinglot.service.ParkingZoneService;
 
 import java.time.temporal.ValueRange;
+import java.util.List;
 
-import static parkinglot.config.Messages.INVALID_ID;
+import static parkinglot.config.Messages.*;
 
 @Controller
 public class UpdateController {
@@ -106,8 +107,24 @@ public class UpdateController {
     }
 
     @PostMapping("/parking-update")
-    public String updateParking (ParkingDTO parkingDTO){
-       parkingService.updateParking(parkingDTO,selectedParkingId);
+    public String updateParking (Model model,ParkingDTO parkingDTO){
+        List<String> strings = parkingService.updateParking(parkingDTO,selectedParkingId);
+        StringBuilder stringBuilder = new StringBuilder();
+        if (strings.contains("name")){
+            model.addAttribute("mistakeForName",INVALID_NAME);
+        }if (strings.contains("city")){
+            model.addAttribute("mistakeForCity",INVALID_CITY);
+        }
+        if (strings.contains("zipCode")){
+            model.addAttribute("mistakeForZipCode",INVALID_ZIP_CODE);
+        }
+        if (strings.contains("street")){
+            model.addAttribute("mistakeForStreet",INVALID_STREET);
+        }
+        if (!strings.isEmpty()) {
+            return "parking-update";
+        }
+
 
 
         return "redirect:/select-parking-update";
@@ -162,15 +179,20 @@ public class UpdateController {
     @GetMapping("/zone-update")
     public String showOldZone(Model model) {
        ParkingZone zone = parkingZoneService.getZoneById(selectedZoneId);
-
        model.addAttribute("name",zone.getName());
        return "zone-update";
     }
 
     @PostMapping("/zone-update")
-    public String updateZone (ParkingZoneDTO zoneDTO){
+    public String updateZone (Model model,ParkingZoneDTO zoneDTO){
 
-       parkingZoneService.updateZone(zoneDTO,selectedZoneId);
+       String excZone = parkingZoneService.updateZone(zoneDTO,selectedZoneId);
+      if (excZone!=null){
+          model.addAttribute("mistakeForName",INVALID_ZONE_NAME);
+          ParkingZone zone = parkingZoneService.getZoneById(selectedZoneId);
+          model.addAttribute("name",zone.getName());
+          return "/zone-update";
+      }
 
 
         return "redirect:/select-zone-update";
@@ -225,16 +247,19 @@ public class UpdateController {
     @GetMapping("/place-update")
     public String showOldPLace(Model model) {
        ParkingPlace parkingPlace = parkingPlaceService.getParkingPlaceById(selectedPlaceId).get();
-
         model.addAttribute("number",parkingPlace.getNumber());
-
         return "place-update";
     }
 
     @PostMapping("/place-update")
-    public String updatePlace (ParkingPlaceDTO placeDTO){
-        parkingPlaceService.updatePlace(placeDTO,selectedPlaceId);
-
+    public String updatePlace (Model model,ParkingPlaceDTO placeDTO){
+        String excPlace = parkingPlaceService.updatePlace(placeDTO,selectedPlaceId);
+        if (excPlace!=null){
+            model.addAttribute("mistakeForPlace",INVALID_PLACE_NUMBER);
+            ParkingPlace parkingPlace = parkingPlaceService.getParkingPlaceById(selectedPlaceId).get();
+            model.addAttribute("number",parkingPlace.getNumber());
+            return "/place-update";
+        }
 
         return "redirect:/select-place-update";
     }
@@ -289,16 +314,22 @@ public class UpdateController {
     public String showOldCar(Model model) {
         Car car = carService.getCarById(selectedCarId).get();
 
-        model.addAttribute("plateNumber",car.getPlateNumber());
+        model.addAttribute("car",car.getPlateNumber());
 
 
         return "car-update";
     }
 
     @PostMapping("/car-update")
-    public String updateCar (CarDTO carDTO){
+    public String updateCar (Model model,CarDTO carDTO){
         carService.updateParking(carDTO,selectedCarId);
-
+        String excCar = carService.updateParking(carDTO,selectedCarId);
+        if (excCar!=null){
+            model.addAttribute("mistakeForCar",INVALID_PLATE_NUMBER);
+            Car oldCartoPrint = carService.getCarById(selectedCarId).get();
+            model.addAttribute("car",oldCartoPrint.getPlateNumber());
+            return "/car-update";
+        }
 
         return "redirect:/select-car-update";
     }

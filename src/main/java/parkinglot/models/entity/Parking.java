@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -21,7 +22,7 @@ public class Parking extends BaseEntity{
 
 
     @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    List<ParkingZone> parkingZones;
+    Set<ParkingZone> parkingZones;
 
     @Column
     String city;

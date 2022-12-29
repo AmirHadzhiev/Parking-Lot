@@ -20,7 +20,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" th:href="@{/home}">Home</a>
+      <a class="navbar-brand" th:href="@{/}">Home</a>
     </div>
   </div>
 </nav>
@@ -34,44 +34,37 @@
     <div class="form-group">
       <label for="CarId" class="col-lg-2 control-label">Car Id</label>
       <div class="col-lg-4">
-        <input type="text" autofocus="autofocus" name="carId" title="CarId" class="form-control"
+        <input type="text" autofocus="autofocus" name="carId" th:text="${mistakeForCarID}" title="CarId" class="form-control"
                id="CarId"  th:value="${carId}"/>
-      </div>
-      <div class="col-lg-2 col-lg-offset-1">
-        <button type="submit" class="btn btn-primary">Check Input</button>
       </div>
     </div>
 
     <div class="form-group">
       <label for="ParkingId" class="col-lg-2 control-label">Parking Id</label>
       <div class="col-lg-4">
-        <input type="text" autofocus="autofocus" name="parkingId" title="ParkingId" class="form-control"
+        <input type="text" autofocus="autofocus" name="parkingId"  th:text="${mistakeForParkingID}" title="ParkingId" class="form-control"
                id="ParkingId"  th:value="${parkingId}"/>
       </div>
-      <div class="col-lg-2 col-lg-offset-1">
-        <button type="submit" class="btn btn-primary">Check Input</button>
-      </div>
     </div>
-
     <div class="form-group">
       <label for="ParkingZoneId" class="col-lg-2 control-label">Parking Zone Id</label>
       <div class="col-lg-4">
-        <input type="text" autofocus="autofocus" name="zoneId" title="ParkingZoneId" class="form-control"
+        <input type="text" autofocus="autofocus" name="zoneId"  th:text="${mistakeForZoneID}" title="ParkingZoneId" class="form-control"
                id="ParkingZoneId"  th:value="${zoneId}"/>
       </div>
       <div class="col-lg-2 col-lg-offset-1">
-        <button type="submit" class="btn btn-primary">Check Input</button>
+        <button type="submit" class="btn btn-primary">Evaluate Input</button>
       </div>
     </div>
 
     <div class="form-group">
       <label for="ParkingPlaceId" class="col-lg-2 control-label">Parking Place Id</label>
       <div class="col-lg-4">
-        <input type="text" autofocus="autofocus" name="placeId" title="ParkingPlaceId" class="form-control"
+        <input type="text" autofocus="autofocus" name="placeId"  th:text="${mistakeForPlaceID}" title="ParkingPlaceId" class="form-control"
                id="ParkingPlaceId"  th:value="${placeId}"/>
       </div>
       <div class="col-lg-2 col-lg-offset-1">
-        <button type="submit" class="btn btn-primary">Park the Car</button>
+        <a th:href="@{/dummy}" class="btn btn-primary">Park the Car</a>
       </div>
     </div>
     <div class="jumbotron">

@@ -14,6 +14,7 @@ import parkinglot.repository.ParkingZoneRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,18 +65,11 @@ public class ParkingPlaceService {
         if (zone.isPresent()){
 
             ParkingPlace parkingPlaceToSafe = modelMapper.map(parkingPlaceDTO, ParkingPlace.class);
-
             parkingPlaceRepository.saveAndFlush(parkingPlaceToSafe);
-
-            ParkingZone parkingZone = parkingZoneRepository.findById(selectedParkingZoneId).get();
-
-
-            List<ParkingPlace> parkingPlace = parkingZone.getParkingPlace();
-
+            ParkingZone parkingZone = zone.get();
+            Set<ParkingPlace> parkingPlace = parkingZone.getParkingPlace();
             parkingPlace.add(parkingPlaceToSafe);
-
             parkingZone.setParkingPlace(parkingPlace);
-
             parkingZoneRepository.saveAndFlush(parkingZone);
         }
         return null;
@@ -84,7 +78,7 @@ public class ParkingPlaceService {
 
         ParkingZone parkingZone = parkingZoneRepository.findById(zoneId).get();
 
-        List<ParkingPlace> parkingPlaces = parkingZone.getParkingPlace();
+        Set<ParkingPlace> parkingPlaces = parkingZone.getParkingPlace();
         return parkingPlaces.stream()
                 .filter(parkingPlace -> parkingPlace.getCar()==null)
                 .map(place -> this.modelMapper.map(place, ParkingPlaceToStringDTO.class))
@@ -129,7 +123,7 @@ public class ParkingPlaceService {
      if (parkingPlaceRepository.findById(placeId).isPresent()){
          List<ParkingZone> listZones = parkingZoneRepository.findAll();
          for (ParkingZone parkingZone : listZones) {
-             List<ParkingPlace> parkingPlace = parkingZone.getParkingPlace();
+             Set<ParkingPlace> parkingPlace = parkingZone.getParkingPlace();
              for (ParkingPlace place : parkingPlace) {
                  if (place!=null && place.getId()==placeId){
                      parkingPlace.remove(place);
@@ -148,18 +142,29 @@ public class ParkingPlaceService {
        return parkingPlaceRepository.findById(id);
     }
 
-    public void updatePlace(ParkingPlaceDTO placeDTO, Long selectedPlaceId) {
+    public String updatePlace(ParkingPlaceDTO placeDTO, Long selectedPlaceId) {
+
         if (parkingPlaceRepository.findById(selectedPlaceId).isPresent()) {
-
             ParkingPlace placeToUpdate = parkingPlaceRepository.findById(selectedPlaceId).get();
-
-            if(!placeDTO.getNumber().isEmpty()) {
-                placeToUpdate.setNumber((placeDTO.getNumber()));
-            } else {
-                placeToUpdate.setNumber("");
+            boolean testingPlaceForExc = false;
+            try {
+                int placeCode = Integer.parseInt(placeDTO.getNumber());
+            } catch (NumberFormatException nfe){
+                testingPlaceForExc=true;
             }
+            if (testingPlaceForExc){
+                return "place";
+            }
+
+            if (placeDTO.getNumber().length()< 1 || placeDTO.getNumber().length()>5){
+                return "place";
+            }
+
+            placeToUpdate.setNumber((placeDTO.getNumber()));
+
             parkingPlaceRepository.saveAndFlush(placeToUpdate);
         }
+        return null;
     }
     public String showPlaceById(Long placeId) {
 

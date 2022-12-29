@@ -14,6 +14,7 @@ import parkinglot.repository.ParkingZoneRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,8 +48,9 @@ public class ParkingZoneService {
 
             ParkingZone parkingZoneToSafe = modelMapper.map(parkingZoneDTO, ParkingZone.class);
             parkingZoneRepository.saveAndFlush(parkingZoneToSafe);
-            List<ParkingZone> parkingZones = parking.get().getParkingZones();
+            Set<ParkingZone> parkingZones = parking.get().getParkingZones();
             parkingZones.add(parkingZoneToSafe);
+
             parking.get().setParkingZones(parkingZones);
             parkingRepository.saveAndFlush(parking.get());
         }
@@ -56,11 +58,11 @@ public class ParkingZoneService {
     }
 
     public String getAllZonesByParkingId(Long id) {
-       if (id == 0 || !parkingRepository.findById(id).isPresent()){
+       if (id == 0 || parkingRepository.findById(id).isEmpty()){
            return "";
        }
        Parking parking = parkingRepository.findById(id).get();
-       List<ParkingZone> parkingZones = parking.getParkingZones();
+       Set<ParkingZone> parkingZones = parking.getParkingZones();
 
        return parkingZones.stream()
                .map(zones -> this.modelMapper.map(zones, ParkingZoneToStringDTO.class))
@@ -95,7 +97,7 @@ public class ParkingZoneService {
         if (parkingZoneRepository.findById(zoneId).isPresent()) {
             List<Parking> allParkings = parkingRepository.findAll();
             for (Parking parking : allParkings) {
-                List<ParkingZone> parkingZones = parking.getParkingZones();
+                Set<ParkingZone> parkingZones = parking.getParkingZones();
                 for (ParkingZone zone : parkingZones) {
                     if (zone != null && zone.getId() == zoneId) {
                         parkingZones.remove(zone);
@@ -116,20 +118,19 @@ public class ParkingZoneService {
         return null;
     }
 
-    public void updateZone(ParkingZoneDTO zoneDTO, Long selectedZoneId) {
+    public String updateZone(ParkingZoneDTO zoneDTO, Long selectedZoneId) {
 
         if (parkingZoneRepository.findById(selectedZoneId).isPresent()) {
-
             ParkingZone zoneToUpdate = parkingZoneRepository.findById(selectedZoneId).get();
 
-            if (!zoneDTO.getName().isEmpty()) {
-                zoneToUpdate.setName(zoneDTO.getName());
-
-            } else {
-                zoneToUpdate.setName("");
+            if (zoneDTO.getName().length()<2 || zoneDTO.getName().length()>20) {
+                return"name";
             }
+
+                zoneToUpdate.setName(zoneDTO.getName());
             parkingZoneRepository.saveAndFlush(zoneToUpdate);
         }
+        return null;
 
     }
     public List<ParkingZone> findAllZones(){
@@ -146,7 +147,7 @@ public class ParkingZoneService {
     public void  unparkCarForZone(Long zoneId) {
         Optional<ParkingZone> parkingZone = parkingZoneRepository.findById(zoneId);
         if (parkingZone.isPresent()){
-            List<ParkingPlace> parkingPlaceList = parkingZone.get().getParkingPlace();
+            Set<ParkingPlace> parkingPlaceList = parkingZone.get().getParkingPlace();
             for (ParkingPlace place : parkingPlaceList) {
                if (place.getCar()!=null){
                    carService.unparkCar(place.getCar().getId());

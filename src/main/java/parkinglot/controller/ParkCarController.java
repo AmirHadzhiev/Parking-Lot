@@ -1,5 +1,6 @@
 package parkinglot.controller;
 
+import org.modelmapper.internal.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,15 +20,40 @@ public class ParkCarController {
     private final CarService carService;
 
     private final ParkingPlaceService parkingPlaceService;
+    private final CarToPark carToPark;
+    private static class CarToPark{
+        private Long carId;
+        private Long parkPlaceId;
 
+        public CarToPark() {
+            this.carId = null;
+            this.parkPlaceId = null;
+        }
 
+        public Long getCarId() {
+            return carId;
+        }
 
+        public void setCarId(Long carId) {
+            this.carId = carId;
+        }
+
+        public Long getParkPlaceId() {
+            return parkPlaceId;
+        }
+
+        public void setParkPlaceId(Long parkPlaceId) {
+            this.parkPlaceId = parkPlaceId;
+        }
+    }
    @Autowired
-    public ParkCarController(ParkingService parkingService, ParkingZoneService parkingZoneService, CarService carService, ParkingPlaceService parkingPlaceService) {
+    public ParkCarController(ParkingService parkingService, ParkingZoneService parkingZoneService,
+                             CarService carService, ParkingPlaceService parkingPlaceService) {
         this.parkingService = parkingService;
        this.parkingZoneService = parkingZoneService;
        this.carService = carService;
        this.parkingPlaceService = parkingPlaceService;
+       this.carToPark = new CarToPark();
    }
 
     @GetMapping("/park-car")
@@ -48,6 +74,25 @@ public class ParkCarController {
 
     @PostMapping("/park-car")
     public String parkCar (Model model, ParkCarDTO parkCarDTO){
+        CarService.ParkCarInput parkCarInput = carService.validateInput(parkCarDTO);
+        Pair<Long, String> carIdExc = parkCarInput.getCarIdExc();
+        Pair<Long, String> parkingIdExc = parkCarInput.getParkingIdExc();
+        Pair<Long, String> parkingZoneIdExc = parkCarInput.getParkingZoneIdExc();
+        Pair<Long, String> parkingPlaceIdExc = parkCarInput.getParkingPlaceIdExc();
+        if (!carIdExc.getRight().isEmpty()){
+            model.addAttribute("mistakeForCarID",carIdExc.getRight());
+        }
+        if (!parkingIdExc.getRight().isEmpty()){
+            model.addAttribute("mistakeForParkingID",parkingIdExc.getRight());
+        }
+        if (!parkingZoneIdExc.getRight().isEmpty()){
+            model.addAttribute("mistakeForZoneID",parkingZoneIdExc.getRight());
+        }
+        if (!parkingPlaceIdExc.getRight().isEmpty()){
+            model.addAttribute("mistakeForPlaceID",parkingPlaceIdExc.getRight());
+        }
+
+
         String allParkings = parkingService.getAllParkings();
         String allAvailableCars = carService.getAllNotParkedCars();
         if (allParkings.isEmpty()){
@@ -58,32 +103,32 @@ public class ParkCarController {
         }
         model.addAttribute("parkings", allParkings);
         model.addAttribute("cars", allAvailableCars);
-        if (parkCarDTO.getCarId()!=null && !carService.isCarParked(parkCarDTO.getCarId())){
-            model.addAttribute("carId", parkCarDTO.getCarId());
+        if (carIdExc.getLeft()!=null && !carService.isCarParked(carIdExc.getLeft())){
+            model.addAttribute("carId", carIdExc.getLeft());
         }
-        if (parkCarDTO.getParkingId()!=null){
-            String allZonesByParkingId = parkingZoneService.getAllZonesByParkingId(parkCarDTO.getParkingId());
+        if (parkingIdExc.getLeft()!=null){
+            String allZonesByParkingId = parkingZoneService.getAllZonesByParkingId(parkingIdExc.getLeft());
             if (allZonesByParkingId.isEmpty()){
                 allZonesByParkingId="Don't have zones";
             } else {
-                model.addAttribute("parkingId", parkCarDTO.getParkingId());
+                model.addAttribute("parkingId", parkingIdExc.getLeft());
             }
             model.addAttribute("parkingZones", allZonesByParkingId);
 
-            if (parkCarDTO.getZoneId() != null){
+            if (parkingZoneIdExc.getLeft() != null){
                 String freeParkingPlacesForZone =
-                        parkingPlaceService.getFreeParkingPlacesForZone(parkCarDTO.getZoneId());
+                        parkingPlaceService.getFreeParkingPlacesForZone(parkingZoneIdExc.getLeft());
                 if (freeParkingPlacesForZone.isEmpty()){
                     freeParkingPlacesForZone="don't have places";
                 } else {
-                    model.addAttribute("zoneId", parkCarDTO.getZoneId());
-                    if (parkCarDTO.getPlaceId()!= null){
-                        model.addAttribute("placeId", parkCarDTO.getPlaceId());
-                        if (parkingPlaceService.isParkingPlaceFree(parkCarDTO.getPlaceId())){
-                            if (parkCarDTO.getCarId() != null){
-                                if (!carService.isCarParked(parkCarDTO.getCarId())){
-                                    carService.parkCar(parkCarDTO.getPlaceId(),parkCarDTO.getCarId());
-                                    return "redirect:/";
+                    model.addAttribute("zoneId", parkingZoneIdExc.getLeft());
+                    if (parkingPlaceIdExc.getLeft()!= null){
+                        model.addAttribute("placeId", parkingIdExc.getLeft());
+                        if (parkingPlaceService.isParkingPlaceFree(parkingPlaceIdExc.getLeft())){
+                            if (carIdExc.getLeft() != null){
+                                if (!carService.isCarParked(carIdExc.getLeft())){
+                                    carToPark.setCarId(carIdExc.getLeft());
+                                    carToPark.setParkPlaceId(parkingPlaceIdExc.getLeft());
                                 }
                             }
                         }
@@ -95,6 +140,13 @@ public class ParkCarController {
         }
 
         return "park-car" ;
+    }
+    @GetMapping("/dummy")
+    public String dummy() {
+        if (carToPark.getCarId()!=null && carToPark.getParkPlaceId()!=null){
+          carService.parkCar(carToPark.getParkPlaceId(), carToPark.getCarId());
+      }
+        return "redirect:/";
     }
 
 

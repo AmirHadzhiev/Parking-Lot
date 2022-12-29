@@ -9,8 +9,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ParkCarDTO {
 
-    Long parkingId;
-    Long zoneId;
-    Long placeId;
-    Long carId;
+    String parkingId;
+    String zoneId;
+    String placeId;
+    String carId;
 }

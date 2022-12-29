@@ -39,6 +39,6 @@ public class ParkingZoneControler {
             model.addAttribute("mistakeForName",INVALID_ZONE_NAME);
         }
 
-        return "/zones-with-id" ;
+        return "zones-with-id" ;
     }
 }

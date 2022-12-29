@@ -34,7 +34,7 @@ public class ParkingController {
     public String addParking (Model model, ParkingDTO parkingDTO){
 
         List<String> strings = parkingService.addParking(parkingDTO);
-        StringBuilder stringBuilder = new StringBuilder();
+
         if (strings.contains("name")){
             model.addAttribute("mistakeForName",INVALID_NAME);
         }if (strings.contains("city")){
@@ -44,7 +44,7 @@ public class ParkingController {
             model.addAttribute("mistakeForZipCode",INVALID_ZIP_CODE);
         }
         if (strings.contains("street")){
-            model.addAttribute("mistakeForName",INVALID_NAME);
+            model.addAttribute("mistakeForStreet",INVALID_STREET);
         }
 
 

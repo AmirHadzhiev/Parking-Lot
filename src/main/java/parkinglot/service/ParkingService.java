@@ -81,38 +81,49 @@ public class ParkingService {
         return  parkingRepository.findById(id).isPresent();
     }
 
-    public void updateParking(ParkingDTO parkingDTO, Long selectedParkingId) {
-
+    public List<String> updateParking(ParkingDTO parkingDTO, Long selectedParkingId) {
+        boolean testingZipCodeForExc = false;
+        try {
+            int zipCode = Integer.parseInt(parkingDTO.getZipCode());
+        } catch (NumberFormatException nfe){
+            testingZipCodeForExc=true;
+        }
+        List<String> caughtErrors = new ArrayList<>();
         if (parkingRepository.findById(selectedParkingId).isPresent()) {
-
             Parking parkingToUpdate = parkingRepository.findById(selectedParkingId).get();
 
-            if (!parkingDTO.getCity().isEmpty()) {
-                parkingToUpdate.setCity((parkingDTO.getCity()));
+            if (parkingDTO.getName().length()<2 || parkingDTO.getName().length()>30) {
+                caughtErrors.add("name");
             } else {
-                parkingToUpdate.setCity("");
+                parkingToUpdate.setName(parkingDTO.getName());
+            }
+            if (parkingDTO.getCity()==null || parkingDTO.getCity().length()<2 || parkingDTO.getCity().length()>30) {
+                caughtErrors.add("city");
+            } else {
+                parkingToUpdate.setCity(parkingDTO.getCity());
             }
 
-            if (!parkingDTO.getName().isEmpty()) {
-                parkingToUpdate.setName((parkingDTO.getName()));
+            if (parkingDTO.getStreet().length()<2 || parkingDTO.getStreet().length()>60 ){
+                caughtErrors.add("street");
             } else {
-                parkingToUpdate.setName("");
+                parkingToUpdate.setStreet(parkingDTO.getStreet());
             }
 
-            if(!parkingDTO.getStreet().isEmpty()) {
-                parkingToUpdate.setStreet((parkingDTO.getStreet()));
+            if (!testingZipCodeForExc) {
+                int zipCode = Integer.parseInt(parkingDTO.getZipCode());
+                if (parkingDTO.getZipCode().length()!=4){
+                    caughtErrors.add("zipCode");
+                } else {
+                    parkingToUpdate.setZipCode(parkingDTO.getZipCode());
+                }
             } else {
-                parkingToUpdate.setStreet("");
+                caughtErrors.add("zipCode");
             }
-
-            if(!parkingDTO.getZipCode().isEmpty()) {
-                parkingToUpdate.setZipCode((parkingDTO.getZipCode()));
-            } else {
-                parkingToUpdate.setZipCode("");
+            if (caughtErrors.isEmpty()) {
+                parkingRepository.saveAndFlush(parkingToUpdate);
             }
-            parkingRepository.saveAndFlush(parkingToUpdate);
         }
-
+        return caughtErrors;
     }
 
 
