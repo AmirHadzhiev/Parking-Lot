@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 @Table(name = "cars")
 public class Car extends BaseEntity {
 
-    @Size(min = 6)
+    @Size(min = 8, max = 10)
     @Column(name = "plate_number",unique = true)
     String plateNumber;
 

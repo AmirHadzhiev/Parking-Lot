@@ -22,8 +22,8 @@ public class ZoneInfoDTO {
     public String toString() {
         StringBuilder finalInput = new StringBuilder();
 
-             String firstInput =   "id= " + id + ", " +
-                        "name= " + name + System.lineSeparator() +
+             String firstInput =   "Parking Zone with id " + id  +
+                        " have name - " + name + System.lineSeparator() +
                      "Parking Zone contains the following places: " + System.lineSeparator() ;
              finalInput.append(firstInput);
         for (ParkingPlace place : this.parkingPlace) {

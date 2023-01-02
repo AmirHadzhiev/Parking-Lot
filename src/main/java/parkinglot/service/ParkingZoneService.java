@@ -38,11 +38,11 @@ public class ParkingZoneService {
     public void selectParkingId(Long id) {
         selectedParkingId=id;
     }
-    public String addParkingZoneWithParkingId(ParkingZoneDTO parkingZoneDTO) {
+    public boolean addParkingZoneWithParkingId(ParkingZoneDTO parkingZoneDTO) {
         Optional<Parking> parking = parkingRepository.findById(selectedParkingId);
 
         if (parkingZoneDTO.getName().length()<2 || parkingZoneDTO.getName().length()>30) {
-            return "name";
+            return true;
         }
         if (parking.isPresent()) {
 
@@ -54,7 +54,7 @@ public class ParkingZoneService {
             parking.get().setParkingZones(parkingZones);
             parkingRepository.saveAndFlush(parking.get());
         }
-        return null;
+        return false;
     }
 
     public String getAllZonesByParkingId(Long id) {
@@ -133,10 +133,9 @@ public class ParkingZoneService {
         return null;
 
     }
-    public List<ParkingZone> findAllZones(){
-
-        return parkingZoneRepository.findAll();
-    }
+   // public List<ParkingZone> findAllZones(){
+  //  return parkingZoneRepository.findAll();
+   // }
     public String showZoneById(Long zoneId) {
 
         return   parkingZoneRepository.findById(zoneId)

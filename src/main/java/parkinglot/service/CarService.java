@@ -50,15 +50,21 @@ public class CarService {
 
 
 
-    public String addCar(CarDTO carDTO) {
+    public Boolean addCar(CarDTO carDTO) {
 
+        for (Car car : carRepository.findAll()) {
+            if (car.getPlateNumber().equals(carDTO.getPlateNumber())){
+                return true;
+            }
+
+        }
         boolean isValid = validationUtil.isValid(carDTO);
         if (isValid) {
             Car carToSafe = modelMapper.map(carDTO, Car.class);
             carRepository.saveAndFlush(carToSafe);
-            return null;
+            return false;
         }
-        return "plateNumber";
+        return true;
     }
 
 
@@ -70,14 +76,15 @@ public class CarService {
                 .collect(Collectors.joining(System.lineSeparator()));
     }
     public void unparkCar(Long id) {
-        Car carToSafeWithNoPLace = carRepository.findById(id).get();
-        ParkingPlace parkingPlacesWithNoCar = carToSafeWithNoPLace.getParkingPlaces();
-        carToSafeWithNoPLace.setParkingPlaces(null);
-        carRepository.saveAndFlush(carToSafeWithNoPLace);
+        if (carRepository.findById(id).isPresent()) {
+            Car carToSafeWithNoPLace = carRepository.findById(id).get();
+            ParkingPlace parkingPlacesWithNoCar = carToSafeWithNoPLace.getParkingPlaces();
+            carToSafeWithNoPLace.setParkingPlaces(null);
+            carRepository.saveAndFlush(carToSafeWithNoPLace);
 
-        parkingPlacesWithNoCar.setCar(null);
-        parkingPlaceRepository.saveAndFlush(parkingPlacesWithNoCar);
-
+            parkingPlacesWithNoCar.setCar(null);
+            parkingPlaceRepository.saveAndFlush(parkingPlacesWithNoCar);
+        }
     }
     public String getAllNotParkedCars() {
         return   carRepository.findByParkingPlacesNull()
@@ -87,14 +94,15 @@ public class CarService {
                 .collect(Collectors.joining(System.lineSeparator()));
     }
 
-    public void parkCar(Long parkingPlaceId, Long parkingCarId){
-        Car car = carRepository.findById(parkingCarId).get();
-        ParkingPlace parkingPlace = parkingPlaceRepository.findById(parkingPlaceId).get();
-        car.setParkingPlaces(parkingPlace);
-        parkingPlace.setCar(car);
-        carRepository.saveAndFlush(car);
-        parkingPlaceRepository.saveAndFlush(parkingPlace);
-
+    public void parkCar(Long parkingPlaceId, Long parkingCarId) {
+        if (carRepository.findById(parkingCarId).isPresent() && parkingPlaceRepository.findById(parkingPlaceId).isPresent()) {
+            Car car = carRepository.findById(parkingCarId).get();
+            ParkingPlace parkingPlace = parkingPlaceRepository.findById(parkingPlaceId).get();
+            car.setParkingPlaces(parkingPlace);
+            parkingPlace.setCar(car);
+            carRepository.saveAndFlush(car);
+            parkingPlaceRepository.saveAndFlush(parkingPlace);
+        }
     }
     public boolean isCarParked(Long carId){
         if (carRepository.findById(carId).isPresent()) {
@@ -200,18 +208,18 @@ public class CarService {
         }
         StringBuilder result = new StringBuilder();
         if (car.isPresent()) {
-            result.append(String.format("Car info: id - %s, Plate Number: %s%n",
+            result.append(String.format("Car with id - %s have Plate Number: %s%n",
                     car.get().getId().toString(),car.get().getPlateNumber()));
         } else {
             result.append(String.format("Car is not found!%n"));
         }
         if (carParking!=null){
-            result.append(String.format("Car is in Parking with Info: Id - %s, Name - %s," +
-                            "City - %s, ZipCode - %s, Street - %s %n",carParking.getId().toString(),
+            result.append(String.format("Car is in Parking with  Id - %s, Name - %s," +
+                            " City - %s, ZipCode - %s, Street - %s %n",carParking.getId().toString(),
                     carParking.getName(),carParking.getCity(),carParking.getZipCode(),carParking.getStreet()));
-            result.append(String.format("Car is  in Parking Zone with Info: id - %s, Name: %s%n",
+            result.append(String.format("Car is  in Parking Zone with with Id - %s, Name: %s%n",
                     carParkingZone.getId().toString(),carParkingZone.getName()));
-            result.append(String.format("Car is  in Parking Place with Info: id - %s, Number: %s%n",
+            result.append(String.format("Car is  in Parking Place with  Id - %s, Number: %s%n",
                     carParkingPlace.getId().toString(),carParkingPlace.getNumber()));
         } else {
             result.append(String.format("The Car is not Parked!%n"));

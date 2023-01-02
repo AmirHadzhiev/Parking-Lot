@@ -20,8 +20,8 @@ public class PlaceInfoDTO {
     @Override
     public String toString() {
         StringBuilder finalInput = new StringBuilder();
-        String firstInput = "id=" + id +
-                ", number='" + number + System.lineSeparator();
+        String firstInput = "Parking place with id " + id +
+                " have number - " + number + System.lineSeparator();
         finalInput.append(firstInput);
         if (car!=null){
            finalInput.append( String.format("In the place have car with id - %s and number - %s"

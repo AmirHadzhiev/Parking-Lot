@@ -10,7 +10,7 @@ public enum Messages {
     public static final String INVALID_ZIP_CODE ="Invalid ZIP_COD must be digit with 4 characters";
     public static final String INVALID_ZONE_NAME ="Invalid Parking zone must be between 2 and 20 characters";
 
-    public static final String INVALID_PLACE_NUMBER ="Invalid Parking place must be digit between 1 and 5 characters";
-    public static final String INVALID_PLATE_NUMBER ="Invalid Plate number must be unique and between 6 and 8 characters";
+    public static final String INVALID_PLACE_NUMBER ="Invalid Parking place must be digit between 1 and 7 characters";
+    public static final String INVALID_PLATE_NUMBER ="Invalid Plate number must be unique and between 8 and 10 characters";
 
 }

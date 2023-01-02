@@ -42,15 +42,12 @@ public class ParkingService {
         } catch (NumberFormatException nfe){
             testingZipCodeForExc=true;
         }
-
-
         if (parkingDTO.getName().length()<2 || parkingDTO.getName().length()>30) {
                 caughtErrors.add("name");
             }
         if (parkingDTO.getCity()==null || parkingDTO.getCity().length()<2 || parkingDTO.getCity().length()>30) {
             caughtErrors.add("city");
         }
-
             if (!testingZipCodeForExc) {
                 int zipCode = Integer.parseInt(parkingDTO.getZipCode());
                 if (parkingDTO.getZipCode().length()!=4){
@@ -66,16 +63,13 @@ public class ParkingService {
           Parking parkingToSafe = modelMapper.map(parkingDTO, Parking.class);
           parkingRepository.saveAndFlush(parkingToSafe);
       }
-
-            return caughtErrors;
+      return caughtErrors;
     }
-
 
     public void deleteById(Long id){
         if (parkingRepository.findById(id).isPresent()) {
             parkingRepository.deleteById(id);
         }
-
     }
     public boolean isParkingPresent( Long id){
         return  parkingRepository.findById(id).isPresent();
@@ -146,11 +140,10 @@ public class ParkingService {
     }
 
     public String showParkingById(Long parkingId) {
-
-
         return   parkingRepository.findById(parkingId)
                 .map(parking -> this.modelMapper.map(parking, ParkingInfoDTO.class))
                 .map(ParkingInfoDTO::toString)
               .get();
     }
+
 }

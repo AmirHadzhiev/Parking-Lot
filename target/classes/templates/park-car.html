@@ -28,7 +28,7 @@
 
 <form class="form-horizontal" th:method="POST">
   <fieldset>
-    <legend>Enter required input </legend>
+    <legend>Check all car parking entries without error to park the car</legend>
 
 
     <div class="form-group">
@@ -66,6 +66,9 @@
       <div class="col-lg-2 col-lg-offset-1">
         <a th:href="@{/dummy}" class="btn btn-primary">Park the Car</a>
       </div>
+      <div class="col-lg-2 col-lg-offset-1">
+        <a th:href="@{/}" class="btn btn-primary">Cancel</a>
+      </div>
     </div>
     <div class="jumbotron">
       <form >
@@ -82,13 +85,13 @@
       </form>
       <form >
         <div class="col-md-3 d-flex justify-content-center">
-          <label class="display-4" for="export-project-textarea-zone">Available Parking Zones:</label>
+          <label class="display-4" for="export-project-textarea-zone">To see available Parking Zones you first have to evaluate parking id:</label>
             <textarea class="form-control" id="export-project-textarea-zone" rows="20" th:text="${parkingZones}" readonly></textarea>
         </div>
       </form>
       <form >
         <div class="col-md-3 d-flex justify-content-center">
-          <label class="display-4" for="export-project-textarea-place">Available Parking Places:</label>
+          <label class="display-4" for="export-project-textarea-place">To see available Parking Place you first have to evaluate parking Zone id:</label>
             <textarea class="form-control" id="export-project-textarea-place" rows="20" th:text="${parkingPlaces}" readonly></textarea>
         </div>
       </form>

@@ -30,13 +30,13 @@ public class ParkingInfoDTO {
     @Override
     public String toString() {
             StringBuilder finalInput = new StringBuilder();
-             String firstInput =   "Parking :" +
-                     "id= " + id +
-                        "   name= " + name  +
-                        "   city= " + city  +
-                        "   street= " + street  +
-                        "   zipCode= " + zipCode + System.lineSeparator() +
-                "The parking lot contains the following areas: " + System.lineSeparator() ;
+             String firstInput =   "Parking with  " +
+                     "id " + id +
+                        " have   name - " + name  +
+                        ",   city - " + city  +
+                        ",   street - " + street  +
+                        ",   zipCode - " + zipCode + System.lineSeparator() +
+                "The Parking  contains the following zones: " + System.lineSeparator() ;
              finalInput.append(firstInput);
 
         for (ParkingZone parkingZone : parkingZones) {
